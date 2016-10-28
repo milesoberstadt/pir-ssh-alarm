@@ -8,6 +8,8 @@ GPIO.setwarnings(True)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(inputPin, GPIO.IN)
 
+sshAddress = "username@hostname"
+
 lastAlarm = 0
 # This defines the frequency in seconds that the alarm can go off
 alarmFrequency = 10
@@ -19,7 +21,7 @@ def alarm():
 	if (timestamp > lastAlarm+alarmFrequency):
 		lastAlarm = timestamp
 		print("I'm not alone...")
-		call(["ssh", "miles@192.168.8.10", "~/scripts/pidTriggered.sh"])
+		call(["ssh", sshAddress, "~/scripts/serverPIR.sh"])
 	return
 
 print("Script started, monitoring for monsters...")
