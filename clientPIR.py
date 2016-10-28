@@ -1,0 +1,31 @@
+import RPi.GPIO as GPIO
+import time
+from subprocess import call
+
+inputPin = 11
+
+GPIO.setwarnings(True)
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(inputPin, GPIO.IN)
+
+lastAlarm = 0
+# This defines the frequency in seconds that the alarm can go off
+alarmFrequency = 10
+
+def alarm():
+	global lastAlarm
+	# Get the current unix timestamp...
+	timestamp = int(time.time())
+	if (timestamp > lastAlarm+alarmFrequency):
+		lastAlarm = timestamp
+		print("I'm not alone...")
+		call(["ssh", "miles@192.168.8.10", "~/scripts/pidTriggered.sh"])
+	return
+
+print("Script started, monitoring for monsters...")
+while True:
+        i=GPIO.input(inputPin)
+        #print i
+        if (i==1):
+        	alarm()
+        time.sleep(0.1)
